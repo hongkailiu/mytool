@@ -22,7 +22,7 @@ public class GitTool {
 
 
 
-  public static void main(String[] args){
+  public void doMain(String[] args){
     Injector injector = Guice.createInjector(new CommonModule(), new GitModule());
     GitHelper gitHelper = new GitHelper(injector);
     log.info("GitTool ...");
