@@ -1,6 +1,7 @@
 package tk.hongkailiu.mytool.git;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -23,7 +24,7 @@ public class OrphanFinderTest {
   @Before
   public void setUp() throws Exception {
     packFolder = folder.newFolder("pack");
-    String[] extensions = new String[]{"idx", "bitmap", "pack"};
+    List<String> extensions = Arrays.asList("idx", "bitmap", "pack");
     unitUnderTest = new OrphanFinder(packFolder, extensions);
   }
 

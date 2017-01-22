@@ -1,5 +1,7 @@
 package tk.hongkailiu.mytool.git;
 
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +16,17 @@ import org.apache.commons.io.FilenameUtils;
 public class OrphanFinder {
 
   private File folder;
-  private String[] extensions;
+  private List<String> extensions;
 
-  public OrphanFinder(@NonNull File folder, @NonNull String[] extensions) {
+  @Inject
+  public OrphanFinder(@Assisted @NonNull File folder, @Assisted @NonNull List<String> extensions) {
     this.folder = folder;
     this.extensions = extensions;
+  }
+
+  public interface OrphanFinderFactory {
+
+    OrphanFinder create(File folder, List<String> extensions);
   }
 
   public List<File> find() {
