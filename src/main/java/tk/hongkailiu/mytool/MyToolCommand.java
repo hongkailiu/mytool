@@ -33,11 +33,6 @@ public class MyToolCommand implements Command {
   /* */ Command command;
 
   public void doMain(String[] args) throws CmdLineException {
-
-    /*ParserProperties parserProperties = ParserProperties.defaults();
-    parserProperties.withUsageWidth(80);
-    CmdLineParser parser = new CmdLineParser(this, parserProperties);*/
-
     parser.parseArgument(args);
   }
 
