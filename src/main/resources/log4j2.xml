@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
+  <Properties>
+    <Property name="log.path">../logs</Property>
+  </Properties>
   <Appenders>
-    <Console name="Console" target="SYSTEM_OUT">
-      <PatternLayout pattern="%d{ISO8601} [%t] %-5level %logger{36} - %msg%n"/>
-    </Console>
+    <RollingFile name="RollingFile" fileName="${log.path}/gc.log"
+      filePattern="${log.path}/gc.log.%d{yyyy-MM-dd}.gz"
+      ignoreExceptions="false">
+      <PatternLayout
+        pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level %logger{1} - %t - %msg%n" />
+      <Policies>
+        <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+        <SizeBasedTriggeringPolicy size="30 MB" />
+      </Policies>
+    </RollingFile>
   </Appenders>
   <Loggers>
-    <Root level="INFO">
-      <AppenderRef ref="Console"/>
+    <Logger name="com.ericsson.gerrit.plugins.gcconductor" level="info" />
+    <Root level="error">
+      <AppenderRef ref="RollingFile" />
     </Root>
   </Loggers>
 </Configuration>
