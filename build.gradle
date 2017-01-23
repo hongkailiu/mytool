@@ -79,6 +79,7 @@ distributions {
         }
     }
 }
+distTar.enabled = false
 
 publishing {
     publications {
