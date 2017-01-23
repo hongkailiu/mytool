@@ -1,5 +1,6 @@
 package tk.hongkailiu.mytool;
 
+import java.io.OutputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,8 @@ public class MyToolTest {
     Mockito.doThrow(
         new CmdLineException((CmdLineParser) null, new IllegalArgumentException("error-msg")))
         .when(myToolCommandMock).doMain(args);
+    Mockito.doNothing().when(myToolCommandMock).printUsage(Mockito.any(OutputStream.class));
     MyTool.main(args);
+    Mockito.verify(myToolCommandMock, Mockito.times(1)).printUsage(Mockito.any(OutputStream.class));
   }
 }

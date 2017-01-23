@@ -1,11 +1,14 @@
 package tk.hongkailiu.mytool;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -19,6 +22,8 @@ public class MyToolCommandTest {
   private MyToolCommand unitUnderTest;
   @Mock
   Command commandMock;
+  @Mock
+  CmdLineParser cmdLineParserMock;
 
   @Before
   public void setUp() {
@@ -109,6 +114,14 @@ public class MyToolCommandTest {
     Mockito.doNothing().when(commandMock).execute();
     unitUnderTest.execute();
     Mockito.verify(commandMock, Mockito.times(1)).execute();
+  }
 
+  @Test
+  public void testPrintUsage() throws Exception {
+    unitUnderTest.parser = cmdLineParserMock;
+    OutputStream os = new ByteArrayOutputStream();
+    Mockito.doNothing().when(cmdLineParserMock).printUsage(os);
+    unitUnderTest.printUsage(os);
+    Mockito.verify(cmdLineParserMock, Mockito.times(1)).printUsage(os);
   }
 }

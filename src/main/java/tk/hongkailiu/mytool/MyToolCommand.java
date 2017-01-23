@@ -11,7 +11,6 @@ import org.kohsuke.args4j.spi.SubCommandHandler;
 import org.kohsuke.args4j.spi.SubCommands;
 
 import java.io.OutputStream;
-import java.io.PrintStream;
 
 import tk.hongkailiu.mytool.git.GitCommand;
 import tk.hongkailiu.mytool.helper.AppCommand;
@@ -22,7 +21,7 @@ import tk.hongkailiu.mytool.helper.AppCommand;
 @Slf4j
 public class MyToolCommand implements Command {
 
-  private CmdLineParser parser =
+  /* package */ CmdLineParser parser =
       new CmdLineParser(this, ParserProperties.defaults().withUsageWidth(80));
 
   @Argument(required = true, index = 0, metaVar = "command", usage = "subcommands", handler = SubCommandHandler.class)
@@ -30,7 +29,7 @@ public class MyToolCommand implements Command {
       @SubCommand(name = "git", impl = GitCommand.class),
       @SubCommand(name = "app", impl = AppCommand.class),
   })
-  /* */ Command command;
+  /* package */ Command command;
 
   public void doMain(String[] args) throws CmdLineException {
     parser.parseArgument(args);
