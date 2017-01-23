@@ -1,17 +1,18 @@
 package tk.hongkailiu.mytool;
 
 import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.OptionHandlerFilter;
 
 /**
  * Created by hongkailiu on 2017-01-21.
  */
 public class MyTool {
 
-  /* package */ static MyToolRunner myToolRunner = new MyToolRunner();
+  /* package */ static MyToolCommand myToolCommand = new MyToolCommand();
 
   private static void doMain(String[] args) throws CmdLineException {
-    myToolRunner.doMain(args);
+    //myToolRunner.doMain(args);
+    myToolCommand.doMain(args);
+    myToolCommand.execute();
   }
 
   public static void main(String[] args) {

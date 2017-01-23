@@ -52,6 +52,9 @@ public class OrphanFinder {
     String extension = FilenameUtils.getExtension(absolutePath);
     log.debug("basename: " + basename);
     log.debug("extension " + extension);
+    if (!extensions.contains(extension)) {
+      return false;
+    }
     for (String myExtension : extensions) {
       if (!myExtension.equals(extension) && !new File(folder, basename + "." + myExtension)
           .exists()) {

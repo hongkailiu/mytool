@@ -16,11 +16,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class MyToolTest {
 
   @Mock
-  MyToolRunner myToolRunnerMock;
+  MyToolCommand myToolCommandMock;
 
   @Before
   public void setUp() {
-    MyTool.myToolRunner = myToolRunnerMock;
+    MyTool.myToolCommand = myToolCommandMock;
   }
 
   @Test(expected = IllegalArgumentException.class)
@@ -31,7 +31,8 @@ public class MyToolTest {
   @Test
   public void testMainWithUnknownArgs() throws Exception {
     String[] args = new String[]{"unknown-args"};
-    Mockito.doNothing().when(myToolRunnerMock).doMain(args);
+    Mockito.doNothing().when(myToolCommandMock).doMain(args);
+    Mockito.doNothing().when(myToolCommandMock).execute();
     MyTool.main(args);
   }
 
@@ -40,7 +41,7 @@ public class MyToolTest {
     String[] args = new String[]{"unknown-args"};
     Mockito.doThrow(
         new CmdLineException((CmdLineParser) null, new IllegalArgumentException("error-msg")))
-        .when(myToolRunnerMock).doMain(args);
+        .when(myToolCommandMock).doMain(args);
     MyTool.main(args);
   }
 }

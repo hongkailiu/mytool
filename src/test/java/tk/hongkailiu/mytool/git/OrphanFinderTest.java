@@ -34,11 +34,58 @@ public class OrphanFinderTest {
   }
 
   @Test
-  public void testFind() throws Exception {
+  public void testFind1() throws Exception {
     File file1 = new File(packFolder, "1." + "idx");
     Assertions.assertThat(file1.createNewFile()).isTrue();
     List<File> orphans = unitUnderTest.find();
-    Assertions.assertThat(orphans).isNotEmpty();
+    Assertions.assertThat(orphans).isNotEmpty().hasSize(1);
+  }
+
+  @Test
+  public void testFind2() throws Exception {
+    File file1 = new File(packFolder, "1." + "idx");
+    File file2 = new File(packFolder, "1." + "bitmap");
+    File file3 = new File(packFolder, "1." + "pack");
+    Assertions.assertThat(file1.createNewFile()).isTrue();
+    Assertions.assertThat(file2.createNewFile()).isTrue();
+    Assertions.assertThat(file3.createNewFile()).isTrue();
+    List<File> orphans = unitUnderTest.find();
+    Assertions.assertThat(orphans).isEmpty();
+  }
+
+  @Test
+  public void testFindPackFolderIsFile() throws Exception {
+    File file1 = new File(packFolder, "1." + "idx");
+    unitUnderTest = new OrphanFinder(file1, Arrays.asList("aaa"));
+    Assertions.assertThat(file1.createNewFile()).isTrue();
+    List<File> orphans = unitUnderTest.find();
+    Assertions.assertThat(orphans).isEmpty();
+  }
+
+  @Test
+  public void testFindPackFileIsFolder() throws Exception {
+    File file1 = new File(packFolder, "1." + "bitmap");
+    Assertions.assertThat(file1.mkdir()).isTrue();
+    List<File> orphans = unitUnderTest.find();
+    Assertions.assertThat(orphans).isEmpty();
+  }
+
+  @Test
+  public void testFindPackFileWithUnknownExtension() throws Exception {
+    File file1 = new File(packFolder, "1." + "aaa");
+    Assertions.assertThat(file1.createNewFile()).isTrue();
+    List<File> orphans = unitUnderTest.find();
+    Assertions.assertThat(orphans).isEmpty();
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testConstructor1() throws Exception {
+    unitUnderTest = new OrphanFinder(null, Arrays.asList("aaa"));
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void testConstructor2() throws Exception {
+    unitUnderTest = new OrphanFinder(packFolder, null);
   }
 
 }
