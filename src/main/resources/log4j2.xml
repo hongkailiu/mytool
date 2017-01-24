@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
   <Properties>
-    <Property name="log.path">../logs</Property>
+    <Property name="app.name">my-tool</Property>
+    <Property name="log.path">/tmp/logs</Property>
   </Properties>
   <Appenders>
-    <RollingFile name="RollingFile" fileName="${log.path}/gc.log"
-      filePattern="${log.path}/gc.log.%d{yyyy-MM-dd}.gz"
+    <RollingFile name="RollingFile" fileName="${log.path}/${app.name}.log"
+      filePattern="${log.path}/${app.name}.log.%d{yyyy-MM-dd}.gz"
       ignoreExceptions="false">
       <PatternLayout
-        pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level %logger{1} - %t - %msg%n" />
+        pattern="%d{yyy-MM-dd HH:mm:ss.SSS} %-5level %logger{1} - %t - %msg%n"/>
       <Policies>
-        <TimeBasedTriggeringPolicy interval="1" modulate="true" />
-        <SizeBasedTriggeringPolicy size="30 MB" />
+        <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+        <SizeBasedTriggeringPolicy size="30 MB"/>
       </Policies>
     </RollingFile>
   </Appenders>
   <Loggers>
-    <Logger name="com.ericsson.gerrit.plugins.gcconductor" level="info" />
+    <Logger name="tk.hongkailiu.mytool" level="info"/>
     <Root level="error">
-      <AppenderRef ref="RollingFile" />
+      <AppenderRef ref="RollingFile"/>
     </Root>
   </Loggers>
 </Configuration>

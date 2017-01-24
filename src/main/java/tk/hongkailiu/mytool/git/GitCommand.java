@@ -7,11 +7,11 @@ import com.google.inject.Injector;
 import java.io.File;
 import java.util.Arrays;
 
+import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.kohsuke.args4j.Option;
-import org.kohsuke.args4j.spi.SubCommand;
 
 import tk.hongkailiu.mytool.Command;
 import tk.hongkailiu.mytool.git.OrphanFinder.OrphanFinderFactory;
@@ -40,7 +40,11 @@ public class GitCommand implements Command {
     Injector injector =
         Guice.createInjector(new CommonModule(), new GitModule());
     GitHelper gitHelper = new GitHelper(injector);
-    log.info("GitCommand ...");
-    gitHelper.findOrphans(folder, Arrays.asList(extensions));
+    System.out.println("GitCommand ...");
+    System.out.println("folder: " + folder.getAbsolutePath());
+    System.out.println("extensions: " + Arrays.toString(extensions));
+    List<File> files = gitHelper.findOrphans(folder, Arrays.asList(extensions));
+    System.out.println("orphan number: " + files.size());
+    files.forEach(f -> System.out.println("orphan file: " + f.getAbsolutePath()));
   }
 }
