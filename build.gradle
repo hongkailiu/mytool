@@ -7,8 +7,7 @@ plugins {
 }
 
 group = 'tk.hongkailiu.mytool'
-version = '0.0.2-SNAPSHOT'
-archivesBaseName = "my-tool"
+version = '0.0.3-SNAPSHOT'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
@@ -70,7 +69,6 @@ task srcZip(type: Zip) {
 distributions {
     main {
         contents {
-            baseName = archivesBaseName
             into('libs') {
                 from jar, configurations.runtime
 
@@ -88,7 +86,7 @@ distTar.enabled = false
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        myPublicationName(MavenPublication) {
             artifact distZip
             artifact srcZip
             artifact jar

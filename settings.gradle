@@ -16,4 +16,4 @@ include 'api'
 include 'services:webservice'
 */
 
-rootProject.name = 'mytool'
+rootProject.name = 'my-tool'
