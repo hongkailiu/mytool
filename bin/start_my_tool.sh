@@ -4,7 +4,7 @@
 
 readonly SCRIPT=$(readlink -f "${0}")
 readonly SCRIPT_PATH=$(dirname "${SCRIPT}")
-readonly SERVICE_NAME=my-tool
+readonly SERVICE_NAME=mytool
 readonly PATH_TO_JAR="${SCRIPT_PATH}/../libs/${SERVICE_NAME}-*.jar"
 readonly PATH_TO_LOG_CONFIG="${SCRIPT_PATH}/../conf/log4j2.xml"
 
