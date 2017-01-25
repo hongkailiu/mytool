@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
   <Properties>
-    <Property name="app.name">my-tool</Property>
+    <Property name="app.name">mytool</Property>
     <Property name="log.path">/tmp/logs</Property>
   </Properties>
   <Appenders>

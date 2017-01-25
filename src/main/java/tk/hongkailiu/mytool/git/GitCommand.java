@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.kohsuke.args4j.Option;
+import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import tk.hongkailiu.mytool.Command;
 import tk.hongkailiu.mytool.git.OrphanFinder.OrphanFinderFactory;
@@ -24,7 +25,7 @@ import tk.hongkailiu.mytool.module.GitModule;
 @Slf4j
 public class GitCommand implements Command {
 
-  @Option(required = true, name = "-extensions", usage = "extension, eg, \"idx\" \"bitmap\" \"pack\"")
+  @Option(required = true, name = "-extensions", usage = "extension, eg, \"idx\" \"bitmap\" \"pack\"", handler = StringArrayOptionHandler.class)
   @Getter
   private String[] extensions;
 
@@ -40,6 +41,7 @@ public class GitCommand implements Command {
     Injector injector =
         Guice.createInjector(new CommonModule(), new GitModule());
     GitHelper gitHelper = new GitHelper(injector);
+    log.info("GitCommand ...");
     System.out.println("GitCommand ...");
     System.out.println("folder: " + folder.getAbsolutePath());
     System.out.println("extensions: " + Arrays.toString(extensions));
