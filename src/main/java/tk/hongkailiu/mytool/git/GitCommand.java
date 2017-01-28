@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,13 +29,18 @@ import tk.hongkailiu.mytool.module.GitModule;
 @Parameters(commandDescription = "Git command")
 public class GitCommand implements Command {
 
-  @Parameter(names = "-extensions", description = "The extensions")
+  public static final String FIND_ORPHANS = "findOrphans";
+
+  @Getter
+  @Parameter(names = "-extensions", description = "The extensions, e.g., pack,bitmap,idx")
   private List<String> extensions = new ArrayList();
 
+  @Getter
   @Parameter(names = "-folder", description = "The folder name", converter = FileConverter.class)
   private File folder;
 
-  @Parameter(names = "-action", description = "Action", required = true)
+  @Getter
+  @Parameter(names = "-action", description = "Action, e.g., " + FIND_ORPHANS, required = true)
   private String action;
 
   @Inject
@@ -47,10 +53,7 @@ public class GitCommand implements Command {
     GitHelper gitHelper = new GitHelper(injector);
     log.info("GitCommand ...");
 
-    if (StringUtils.isBlank(action)) {
-      throw new ParameterException("empty action");
-    }
-
+    validate();
 
     System.out.println("GitCommand ...");
     System.out.println("folder: " + folder.getAbsolutePath());
@@ -58,5 +61,22 @@ public class GitCommand implements Command {
     List<File> files = gitHelper.findOrphans(folder, extensions);
     System.out.println("orphan number: " + files.size());
     files.forEach(f -> System.out.println("orphan file: " + f.getAbsolutePath()));
+  }
+
+  private void validate() {
+    if (StringUtils.isBlank(action)) {
+      throw new ParameterException("empty action");
+    }
+
+    switch (action) {  // $COVERAGE-IGNORE$ https://github.com/jacoco/jacoco/wiki/FilteringOptions
+      case FIND_ORPHANS:
+        if (folder == null || !folder.exists() || !folder
+            .isDirectory()) {
+          throw new ParameterException("no such a folder: " + folder.getAbsolutePath());
+        }
+        break;
+      default:
+        throw new ParameterException("not supported git action: " + action);
+    }
   }
 }
