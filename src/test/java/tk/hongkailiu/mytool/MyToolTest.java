@@ -1,11 +1,9 @@
 package tk.hongkailiu.mytool;
 
-import java.io.OutputStream;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -17,34 +15,25 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class MyToolTest {
 
   @Mock
-  MyToolCommand myToolCommandMock;
+  private MyToolCommand myToolCommandMock;
 
   @Before
   public void setUp() {
     MyTool.myToolCommand = myToolCommandMock;
   }
 
-  @Test(expected = IllegalArgumentException.class)
-  public void testMainWithNull() throws Exception {
-    MyTool.main(null);
-  }
-
   @Test
-  public void testMainWithUnknownArgs() throws Exception {
-    String[] args = new String[]{"unknown-args"};
-    Mockito.doNothing().when(myToolCommandMock).doMain(args);
+  public void testMain() throws Exception {
+    String[] args = new String[]{"some-arg"};
+    Mockito.doNothing().when(myToolCommandMock).parse(args);
     Mockito.doNothing().when(myToolCommandMock).execute();
     MyTool.main(args);
+    Mockito.verify(myToolCommandMock, Mockito.times(1)).parse(args);
+    Mockito.verify(myToolCommandMock, Mockito.times(1)).execute();
   }
 
   @Test
-  public void testMainWithException() throws Exception {
-    String[] args = new String[]{"unknown-args"};
-    Mockito.doThrow(
-        new CmdLineException((CmdLineParser) null, new IllegalArgumentException("error-msg")))
-        .when(myToolCommandMock).doMain(args);
-    Mockito.doNothing().when(myToolCommandMock).printUsage(Mockito.any(OutputStream.class));
-    MyTool.main(args);
-    Mockito.verify(myToolCommandMock, Mockito.times(1)).printUsage(Mockito.any(OutputStream.class));
+  public void testConstructor() throws Exception {
+    Assertions.assertThat(new MyTool()).isNotNull();
   }
 }

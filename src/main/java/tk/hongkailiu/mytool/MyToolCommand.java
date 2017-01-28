@@ -1,17 +1,11 @@
 package tk.hongkailiu.mytool;
 
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-
-import org.kohsuke.args4j.Argument;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.ParserProperties;
-import org.kohsuke.args4j.spi.SubCommand;
-import org.kohsuke.args4j.spi.SubCommandHandler;
-import org.kohsuke.args4j.spi.SubCommands;
-
-import java.io.OutputStream;
-
+import org.apache.commons.lang3.StringUtils;
 import tk.hongkailiu.mytool.git.GitCommand;
 import tk.hongkailiu.mytool.helper.AppCommand;
 
@@ -20,27 +14,60 @@ import tk.hongkailiu.mytool.helper.AppCommand;
  */
 @Slf4j
 public class MyToolCommand implements Command {
+  @Parameter(names = {"-h", "--help"}, help = true)
+  private boolean help = false;
 
-  /* package */ CmdLineParser parser =
-      new CmdLineParser(this, ParserProperties.defaults().withUsageWidth(80));
-
-  @Argument(required = true, index = 0, metaVar = "command", usage = "subcommands", handler = SubCommandHandler.class)
-  @SubCommands({
-      @SubCommand(name = "git", impl = GitCommand.class),
-      @SubCommand(name = "app", impl = AppCommand.class),
-  })
+  private GitCommand git = new GitCommand();
+  private AppCommand app = new AppCommand();
+  /* package */ String subCommand;
   /* package */ Command command;
 
-  public void doMain(String[] args) throws CmdLineException {
-    parser.parseArgument(args);
-  }
+  // Only for test
+  /* package */ boolean noArgsFlag = false;
 
   @Override
   public void execute() {
-    command.execute();
+    if (command!=null) {
+      command.execute();
+    } else {
+      log.warn("command is null");
+    }
   }
 
-  /* package */ void printUsage(OutputStream os) {
-    parser.printUsage(os);
+  public void parse(String[] args) {
+    JCommander jCommander = new JCommander(this);
+    try {
+
+      if (args==null || args.length==0) {
+        noArgsFlag = true;
+        args = new String[]{"-h"};
+      }
+
+      jCommander.setProgramName("mytool");
+      jCommander.addCommand("git", git);
+      jCommander.addCommand("app", app);
+      jCommander.parse(args);
+      if (help) {
+        jCommander.usage();
+        return;
+      }
+      subCommand = jCommander.getParsedCommand();
+
+      if ("git".equals( subCommand)) {
+        command = git;
+      } else if ("app".equals( subCommand)) {
+        command = app;
+      }
+    } catch (ParameterException e) {
+      System.err.println(e.getMessage());
+      //System.err.println("aaa" + jCommander.getParsedCommand());
+      subCommand = jCommander.getParsedCommand();
+      if (StringUtils.isBlank(subCommand)) {
+        jCommander.usage();
+      } else {
+        jCommander.usage(subCommand);
+      }
+    }
   }
+
 }

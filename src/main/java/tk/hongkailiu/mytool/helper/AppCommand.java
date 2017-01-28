@@ -1,9 +1,9 @@
 package tk.hongkailiu.mytool.helper;
 
+import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import org.kohsuke.args4j.Option;
 
 import lombok.extern.slf4j.Slf4j;
 import tk.hongkailiu.mytool.Command;
@@ -13,9 +13,10 @@ import tk.hongkailiu.mytool.module.CommonModule;
  * Created by hongkailiu on 2017-01-22.
  */
 @Slf4j
+@Parameters(commandDescription = "App command")
 public class AppCommand implements Command {
 
-  @Option(name="--version",usage="show version")
+  @Parameter(names = { "-v", "--version" }, description = "show version")
   private boolean version;
 
   private AppInfoHelper appInfoHelper;
