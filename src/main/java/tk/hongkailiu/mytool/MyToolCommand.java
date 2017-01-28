@@ -17,6 +17,7 @@ public class MyToolCommand implements Command {
   @Parameter(names = {"-h", "--help"}, help = true)
   private boolean help = false;
 
+  private JCommander jCommander;
   private GitCommand git = new GitCommand();
   private AppCommand app = new AppCommand();
   /* package */ String subCommand;
@@ -28,14 +29,19 @@ public class MyToolCommand implements Command {
   @Override
   public void execute() {
     if (command != null) {
-      command.execute();
+      try {
+        command.execute();
+      } catch (ParameterException e) {
+        printUsage(e);
+      }
+
     } else {
       log.warn("command is null");
     }
   }
 
   public void parse(String[] args) {
-    JCommander jCommander = new JCommander(this);
+    jCommander = new JCommander(this);
     try {
 
       if (args == null || args.length == 0) {
@@ -55,19 +61,26 @@ public class MyToolCommand implements Command {
 
       command = getCommand(subCommand);
     } catch (ParameterException e) {
-      System.err.println(e.getMessage());
-      //System.err.println("aaa" + jCommander.getParsedCommand());
-      subCommand = jCommander.getParsedCommand();
-      if (StringUtils.isBlank(subCommand)) {
-        jCommander.usage();
-      } else {
-        jCommander.usage(subCommand);
-      }
+      printUsage(e);
+    }
+  }
+
+  private void printUsage(ParameterException e) {
+    log.warn(e.getMessage());
+    System.err.println(e.getMessage());
+    if (jCommander == null) {
+      return;
+    }
+    subCommand = jCommander.getParsedCommand();
+    if (StringUtils.isBlank(subCommand)) {
+      jCommander.usage();
+    } else {
+      jCommander.usage(subCommand);
     }
   }
 
   /* package */ Command getCommand(String command) {
-    switch (command) {
+    switch (command) {  // $COVERAGE-IGNORE$ https://github.com/jacoco/jacoco/wiki/FilteringOptions
       case "git":
         return git;
       case "app":

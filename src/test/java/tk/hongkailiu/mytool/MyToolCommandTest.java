@@ -1,5 +1,6 @@
 package tk.hongkailiu.mytool;
 
+import com.beust.jcommander.ParameterException;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Before;
@@ -88,6 +89,14 @@ public class MyToolCommandTest {
   @Test
   public void testExecute2() throws Exception {
     unitUnderTest.execute();
+  }
+
+  @Test
+  public void testExecuteWithException() throws Exception {
+    unitUnderTest.command = commandMock;
+    Mockito.doThrow(new ParameterException("error-msg")).when(commandMock).execute();
+    unitUnderTest.execute();
+    Mockito.verify(commandMock, Mockito.times(1)).execute();
   }
 
   @Test
