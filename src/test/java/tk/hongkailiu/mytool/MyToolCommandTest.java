@@ -89,4 +89,9 @@ public class MyToolCommandTest {
   public void testExecute2() throws Exception {
     unitUnderTest.execute();
   }
+
+  @Test
+  public void testGetCommand() throws Exception {
+    Assertions.assertThat(unitUnderTest.getCommand("?")).isNull();
+  }
 }

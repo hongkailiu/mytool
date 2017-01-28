@@ -3,7 +3,6 @@ package tk.hongkailiu.mytool;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import tk.hongkailiu.mytool.git.GitCommand;
@@ -14,6 +13,7 @@ import tk.hongkailiu.mytool.helper.AppCommand;
  */
 @Slf4j
 public class MyToolCommand implements Command {
+
   @Parameter(names = {"-h", "--help"}, help = true)
   private boolean help = false;
 
@@ -27,7 +27,7 @@ public class MyToolCommand implements Command {
 
   @Override
   public void execute() {
-    if (command!=null) {
+    if (command != null) {
       command.execute();
     } else {
       log.warn("command is null");
@@ -38,7 +38,7 @@ public class MyToolCommand implements Command {
     JCommander jCommander = new JCommander(this);
     try {
 
-      if (args==null || args.length==0) {
+      if (args == null || args.length == 0) {
         noArgsFlag = true;
         args = new String[]{"-h"};
       }
@@ -53,11 +53,7 @@ public class MyToolCommand implements Command {
       }
       subCommand = jCommander.getParsedCommand();
 
-      if ("git".equals( subCommand)) {
-        command = git;
-      } else if ("app".equals( subCommand)) {
-        command = app;
-      }
+      command = getCommand(subCommand);
     } catch (ParameterException e) {
       System.err.println(e.getMessage());
       //System.err.println("aaa" + jCommander.getParsedCommand());
@@ -70,4 +66,14 @@ public class MyToolCommand implements Command {
     }
   }
 
+  /* package */ Command getCommand(String command) {
+    switch (command) {
+      case "git":
+        return git;
+      case "app":
+        return app;
+      default:
+        return null;
+    }
+  }
 }
