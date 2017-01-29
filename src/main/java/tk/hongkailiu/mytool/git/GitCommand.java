@@ -9,8 +9,6 @@ import com.google.inject.Inject;
 import com.google.inject.Injector;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import java.util.List;
 import lombok.Getter;
@@ -39,6 +37,10 @@ public class GitCommand implements Command {
   @Parameter(names = "-action", description = "Action, e.g., " + FIND_ORPHANS, required = true)
   private String action;
 
+  @Getter
+  @Parameter(names = "-recursive", description = "Recursive")
+  private boolean recursive = false;
+
   @Inject
   private OrphanFinderFactory orphanFinderFactory;
 
@@ -53,7 +55,7 @@ public class GitCommand implements Command {
 
     System.out.println("GitCommand ...");
     System.out.println("folder: " + folder.getAbsolutePath());
-    List<File> files = gitHelper.findOrphans(folder);
+    List<File> files = gitHelper.findOrphans(folder, recursive);
     System.out.println("orphan number: " + files.size());
     files.forEach(f -> System.out.println("orphan file: " + f.getAbsolutePath()));
   }

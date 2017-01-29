@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import tk.hongkailiu.mytool.helper.FileHelper;
 
 /**
  * Created by hongkailiu on 2017-01-21.
@@ -23,7 +24,8 @@ public class OrphanFinderTest {
   @Before
   public void setUp() throws Exception {
     packFolder = folder.newFolder("pack");
-    unitUnderTest = new OrphanFinder(packFolder);
+    unitUnderTest = new OrphanFinder(packFolder, false);
+    unitUnderTest.fileHelper = new FileHelper();
   }
 
   @After
@@ -54,7 +56,8 @@ public class OrphanFinderTest {
   @Test
   public void testFindPackFolderIsFile() throws Exception {
     File file1 = new File(packFolder, "1." + "idx");
-    unitUnderTest = new OrphanFinder(file1);
+    unitUnderTest = new OrphanFinder(file1, false);
+    unitUnderTest.fileHelper = new FileHelper();
     Assertions.assertThat(file1.createNewFile()).isTrue();
     List<File> orphans = unitUnderTest.find();
     Assertions.assertThat(orphans).isEmpty();
@@ -78,7 +81,7 @@ public class OrphanFinderTest {
 
   @Test(expected = NullPointerException.class)
   public void testConstructor1() throws Exception {
-    unitUnderTest = new OrphanFinder(null);
+    unitUnderTest = new OrphanFinder(null, false);
   }
 
 }
