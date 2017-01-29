@@ -44,6 +44,7 @@ public class OrphanFinder {
 
     String base = null;
     for (int i = list.size() - 1; i >= 0; i--) {
+      log.debug("File " + i + ": " + list.get(i));
       if (EXTENSIONS.get(2).equals(FilenameUtils.getExtension(list.get(i)))) {
         base = FilenameUtils.getBaseName(list.get(i));
       } else {
