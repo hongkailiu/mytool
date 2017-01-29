@@ -3,7 +3,10 @@ package tk.hongkailiu.mytool.git;
 import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -16,51 +19,43 @@ import org.apache.commons.io.FilenameUtils;
 public class OrphanFinder {
 
   private File folder;
-  private List<String> extensions;
+  private List<String> extensions = Arrays.asList("idx", "bitmap", "pack");
 
   @Inject
-  public OrphanFinder(@Assisted @NonNull File folder, @Assisted @NonNull List<String> extensions) {
+  public OrphanFinder(@Assisted @NonNull File folder) {
     this.folder = folder;
-    this.extensions = extensions;
   }
 
   public interface OrphanFinderFactory {
 
-    OrphanFinder create(File folder, List<String> extensions);
+    OrphanFinder create(File folder);
   }
 
   public List<File> find() {
     List<File> orphans = new ArrayList();
-    File[] files = folder.listFiles();
+    Path packDir = Paths.get(folder.getAbsolutePath());
 
-    if (files == null) {
+    String[] list = packDir.toFile().list((file, name) ->
+        extensions.stream().anyMatch(ext -> name.endsWith("." + ext))
+    );
+    if (list == null) {
       return orphans;
     }
+    Arrays.sort(list);
 
-    for (File file : files) {
-      if (file.isFile() && isOrphan(file)) {
-        orphans.add(file);
+    String base = null;
+    for (int i = list.length - 1; i >= 0; i--) {
+      if (list[i].endsWith(extensions.get(2))) {
+        base = FilenameUtils.getBaseName(list[i]);
+      } else {
+        if (base == null || !list[i].startsWith(base)) {
+          File candidate = new File(packDir.toFile(), list[i]);
+          if (!candidate.isDirectory()) {
+            orphans.add(candidate);
+          }
+        }
       }
     }
-
     return orphans;
-  }
-
-  private boolean isOrphan(File file) {
-    String absolutePath = file.getAbsolutePath();
-    String basename = FilenameUtils.getBaseName(absolutePath);
-    String extension = FilenameUtils.getExtension(absolutePath);
-    log.debug("basename: " + basename);
-    log.debug("extension " + extension);
-    if (!extensions.contains(extension)) {
-      return false;
-    }
-    for (String myExtension : extensions) {
-      if (!myExtension.equals(extension) && !new File(folder, basename + "." + myExtension)
-          .exists()) {
-        return true;
-      }
-    }
-    return false;
   }
 }

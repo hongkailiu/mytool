@@ -1,7 +1,6 @@
 package tk.hongkailiu.mytool.git;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -24,8 +23,7 @@ public class OrphanFinderTest {
   @Before
   public void setUp() throws Exception {
     packFolder = folder.newFolder("pack");
-    List<String> extensions = Arrays.asList("idx", "bitmap", "pack");
-    unitUnderTest = new OrphanFinder(packFolder, extensions);
+    unitUnderTest = new OrphanFinder(packFolder);
   }
 
   @After
@@ -56,7 +54,7 @@ public class OrphanFinderTest {
   @Test
   public void testFindPackFolderIsFile() throws Exception {
     File file1 = new File(packFolder, "1." + "idx");
-    unitUnderTest = new OrphanFinder(file1, Arrays.asList("aaa"));
+    unitUnderTest = new OrphanFinder(file1);
     Assertions.assertThat(file1.createNewFile()).isTrue();
     List<File> orphans = unitUnderTest.find();
     Assertions.assertThat(orphans).isEmpty();
@@ -80,12 +78,7 @@ public class OrphanFinderTest {
 
   @Test(expected = NullPointerException.class)
   public void testConstructor1() throws Exception {
-    unitUnderTest = new OrphanFinder(null, Arrays.asList("aaa"));
-  }
-
-  @Test(expected = NullPointerException.class)
-  public void testConstructor2() throws Exception {
-    unitUnderTest = new OrphanFinder(packFolder, null);
+    unitUnderTest = new OrphanFinder(null);
   }
 
 }

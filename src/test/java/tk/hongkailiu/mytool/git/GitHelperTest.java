@@ -32,13 +32,13 @@ public class GitHelperTest {
   public void setUp() throws Exception {
     Injector injector = Guice.createInjector(new TestModule());
     unitUnderTest = new GitHelper(injector);
-    Mockito.when(orphanFinderFactoryMock.create(null, null)).thenReturn(orphanFinderMock);
+    Mockito.when(orphanFinderFactoryMock.create(null)).thenReturn(orphanFinderMock);
     Mockito.when(orphanFinderMock.find()).thenReturn(files);
   }
 
   @Test
   public void testFindOrphans() throws Exception {
-    Assertions.assertThat(unitUnderTest.findOrphans(null, null)).isSameAs(files);
+    Assertions.assertThat(unitUnderTest.findOrphans(null)).isSameAs(files);
   }
 
   class TestModule extends AbstractModule {

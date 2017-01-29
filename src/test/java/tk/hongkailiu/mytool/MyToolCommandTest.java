@@ -56,13 +56,12 @@ public class MyToolCommandTest {
 
   @Test
   public void testParseGitWithArg1() throws Exception {
-    String[] args = new String[]{"git", "-action", GitCommand.FIND_ORPHANS, "-folder", "aaa", "-extensions", "pack,bitmap,idx"};
+    String[] args = new String[]{"git", "-action", GitCommand.FIND_ORPHANS, "-folder", "aaa"};
     unitUnderTest.parse(args);
     Assertions.assertThat(unitUnderTest.command).isInstanceOf(GitCommand.class);
     GitCommand gitCommand = (GitCommand) unitUnderTest.command;
     Assertions.assertThat(gitCommand.getAction()).isEqualTo(GitCommand.FIND_ORPHANS);
     Assertions.assertThat(gitCommand.getFolder().getName()).isEqualTo("aaa");
-    Assertions.assertThat(gitCommand.getExtensions()).containsOnlyOnce("pack", "bitmap", "idx");
   }
 
   @Test

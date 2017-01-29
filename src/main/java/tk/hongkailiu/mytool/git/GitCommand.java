@@ -32,10 +32,6 @@ public class GitCommand implements Command {
   public static final String FIND_ORPHANS = "findOrphans";
 
   @Getter
-  @Parameter(names = "-extensions", description = "The extensions, e.g., pack,bitmap,idx")
-  private List<String> extensions = new ArrayList();
-
-  @Getter
   @Parameter(names = "-folder", description = "The folder name", converter = FileConverter.class)
   private File folder;
 
@@ -57,8 +53,7 @@ public class GitCommand implements Command {
 
     System.out.println("GitCommand ...");
     System.out.println("folder: " + folder.getAbsolutePath());
-    System.out.println("extensions: " + Arrays.toString(extensions.toArray()));
-    List<File> files = gitHelper.findOrphans(folder, extensions);
+    List<File> files = gitHelper.findOrphans(folder);
     System.out.println("orphan number: " + files.size());
     files.forEach(f -> System.out.println("orphan file: " + f.getAbsolutePath()));
   }

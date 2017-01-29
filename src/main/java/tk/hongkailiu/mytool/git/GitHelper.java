@@ -15,8 +15,8 @@ public class GitHelper {
     this.orphanFinderFactory = injector.getInstance(OrphanFinderFactory.class);
   }
 
-  public List<File> findOrphans(File folder, List<String> extensions){
-    OrphanFinder orphanFinder = orphanFinderFactory.create(folder, extensions);
+  public List<File> findOrphans(File folder){
+    OrphanFinder orphanFinder = orphanFinderFactory.create(folder);
     return orphanFinder.find();
   }
 }
