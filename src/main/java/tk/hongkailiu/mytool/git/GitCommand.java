@@ -67,7 +67,8 @@ public class GitCommand implements Command {
       case FIND_ORPHANS:
         if (folder == null || !folder.exists() || !folder
             .isDirectory()) {
-          throw new ParameterException("no such a folder: " + folder.getAbsolutePath());
+          throw new ParameterException(
+              "no such a folder: " + folder == null ? "null" : folder.getAbsolutePath());
         }
         break;
       default:
