@@ -41,7 +41,7 @@ public class OrphanFinder {
     List<File> orphans = new ArrayList();
     List<String> list = fileHelper.listFiles(folder, EXTENSIONS, recursive);
     Collections.sort(list);
-
+    log.debug("list.size(): " + list.size());
     String base = null;
     for (int i = list.size() - 1; i >= 0; i--) {
       log.debug("File " + i + ": " + list.get(i));
