@@ -31,11 +31,11 @@ public class GitCommand implements Command {
 
   @Getter
   @Parameter(names = "-folder", description = "The folder name", converter = FileConverter.class)
-  private File folder;
+  /* package */ File folder;
 
   @Getter
   @Parameter(names = "-action", description = "Action, e.g., " + FIND_ORPHANS, required = true)
-  private String action;
+  /* package */ String action;
 
   @Getter
   @Parameter(names = "-recursive", description = "Recursive")
@@ -70,7 +70,7 @@ public class GitCommand implements Command {
         if (folder == null || !folder.exists() || !folder
             .isDirectory()) {
           throw new ParameterException(
-              "no such a folder: " + folder == null ? "null" : folder.getAbsolutePath());
+              "no such a folder: " + (folder == null ? "null" : folder.getAbsolutePath()));
         }
         break;
       default:
