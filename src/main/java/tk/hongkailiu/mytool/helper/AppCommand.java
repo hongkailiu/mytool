@@ -17,7 +17,7 @@ import tk.hongkailiu.mytool.module.CommonModule;
 public class AppCommand implements Command {
 
   @Parameter(names = { "-v", "--version" }, description = "show version")
-  private boolean version;
+  /* package */ boolean version;
 
   private AppInfoHelper appInfoHelper;
 
