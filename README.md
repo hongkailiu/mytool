@@ -36,5 +36,5 @@ $ ./bin/findOrphansR.sh
 ## Run tests
 
 ```sh
-$ ./gradlew clean distZip
+$ ./gradlew clean test
 ```
